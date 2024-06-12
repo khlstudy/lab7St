@@ -15,113 +15,83 @@ namespace lab7St
         public Form1()
         {
             InitializeComponent();
-            gvCity.CellFormatting += gvCity_CellFormatting;
+            gvBicycles.CellFormatting += gvBicycles_CellFormatting;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            gvCity.AutoGenerateColumns = false;
+            gvBicycles.AutoGenerateColumns = false;
 
             DataGridViewColumn column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "CountryName";
-            column.Name = "Назва";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "Brand";
+            column.Name = "Бренд";
+            gvBicycles.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "Continent";
-            column.Name = "Континент";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "Model";
+            column.Name = "Модель";
+            gvBicycles.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "CapitalCity";
-            column.Name = "Столиця";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "FrameSize";
+            column.Name = "Розмір рами";
+            gvBicycles.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "Population";
-            column.Name = "Населення";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "WheelSize";
+            column.Name = "Розмір колеса";
+            gvBicycles.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "Area";
-            column.Name = "Площа";
-            gvCity.Columns.Add(column);
-
-            column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "LifeExpectancy";
-            column.Name = "Очікувана тривалість життя";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "Color";
+            column.Name = "Колір";
+            gvBicycles.Columns.Add(column);
 
             column = new DataGridViewCheckBoxColumn();
-            column.DataPropertyName = "IsInEU";
-            column.Name = "В ЄС";
-            column.Width = 60;
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "IsElectric";
+            column.Name = "Електричний";
+            column.Width = 80;
+            gvBicycles.Columns.Add(column);
 
-            column = new DataGridViewCheckBoxColumn();
-            column.DataPropertyName = "IsInNATO";
-            column.Name = "В НАТО";
-            column.Width = 60;
-            gvCity.Columns.Add(column);
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "PopulationDensity";
-            column.Name = "Густина населення";
-            gvCity.Columns.Add(column);
+            column.DataPropertyName = "Price";
+            column.Name = "Ціна";
+            gvBicycles.Columns.Add(column);
 
-            column = new DataGridViewCheckBoxColumn();
-            column.DataPropertyName = "IsAboveAverage";
-            column.Name = "Вище середньої";
-            column.Width = 60;
-            gvCity.Columns.Add(column);
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "DiscountedPrice";
+            column.Name = "Ціна зі знижкою 10%";
+            gvBicycles.Columns.Add(column);
 
-            Country kiev = new Country("Україна", "Європа", "Київ", 42000000, 603628, 71.5, false, false);
-
-            kiev.PopulationDensity = kiev.CalculatePopulationDensity();
-            kiev.IsAboveAverage = kiev.IsPopulationDensityAboveAverage();
-
-            bindSrcCountry.Add(kiev);
-
-            gvCity.DataSource = bindSrcCountry;
+            bindSrcBicycles.Add(new Bicycle("Trek", "FX 1", 52, 28, "Чорний", false, 1000.00m));
+            gvBicycles.DataSource = bindSrcBicycles;
 
             EventArgs args = new EventArgs();
             OnResize(args);
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+            private void Form1_Resize(object sender, EventArgs e)
         {
             int buttonsSize = 5 * btnAdd.Width + 2 * tsSeparator1.Width + 30; btnExit.Margin = new Padding(Width - buttonsSize, 0, 0, 0);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            Country country = new Country();
-            fCountry fc = new fCountry(ref country);
-            if (fc.ShowDialog() == DialogResult.OK)
+            Bicycle bicycle = new Bicycle();
+            fBicycle fb = new fBicycle(ref bicycle);
+            if (fb.ShowDialog() == DialogResult.OK)
             {
-                bindSrcCountry.Add(country);
-
-                // Розрахунки для нової країни
-                country.PopulationDensity = country.CalculatePopulationDensity();
-                country.IsAboveAverage = country.IsPopulationDensityAboveAverage();
-
-                // Знаходження текстових полів у формі fCountry і встановлення їх значень
-                fCountry fCountryForm = fc as fCountry;
-                if (fCountryForm != null)
-                {
-                    country.PopulationDensity.ToString("F2");
-                    country.IsAboveAverage.ToString();
-                }
+                bindSrcBicycles.Add(bicycle);
             }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            Country country = (Country)bindSrcCountry.List[bindSrcCountry.Position];
-
-            fCountry fc = new fCountry(ref country);
-            if (fc.ShowDialog() == DialogResult.OK)
+            Bicycle bicycle = (Bicycle)bindSrcBicycles.List[bindSrcBicycles.Position];
+            fBicycle fb = new fBicycle(ref bicycle);
+            if (fb.ShowDialog() == DialogResult.OK)
             {
-                bindSrcCountry.List[bindSrcCountry.Position] = country;
+                bindSrcBicycles.List[bindSrcBicycles.Position] = bicycle;
             }
         }
 
@@ -130,7 +100,7 @@ namespace lab7St
             {
                 if (MessageBox.Show("Видалити поточний запис?", "Видалення запису", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
-                    bindSrcCountry.RemoveCurrent();
+                    bindSrcBicycles.RemoveCurrent();
                 }
             }
         }
@@ -139,7 +109,7 @@ namespace lab7St
         {
             if (MessageBox.Show("Очистити таблицю?\n\nВсі дані будуть втрачені", "Очищення даних", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                bindSrcCountry.Clear();
+                bindSrcBicycles.Clear();
             }
         }
 
@@ -151,14 +121,14 @@ namespace lab7St
             }
         }
 
-        private void gvCity_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void gvBicycles_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-                double value;
-                if (double.TryParse(e.Value.ToString(), out value))
-                {
-                    e.Value = value.ToString("F2");
-                    e.FormattingApplied = true;
-                }
+            if (e.ColumnIndex == gvBicycles.Columns["Ціна зі знижкою 10%"].Index && e.Value != null)
+            {
+                Bicycle bicycle = (Bicycle)gvBicycles.Rows[e.RowIndex].DataBoundItem;
+                e.Value = bicycle.CalculateDiscountedPrice().ToString("F2");
+                e.FormattingApplied = true;
+            }
         }
 
     }
